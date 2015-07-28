@@ -1,0 +1,20 @@
+mongo:
+    image: mongo:latest
+    restart: always
+    command: mongod --smallfiles --quiet --logpath=/dev/null --rest --httpinterface
+    ports:
+      - "37017:27017"
+      - "38017:28017"
+
+
+application:
+    build: ../
+    ports:
+      - "4000:3000"
+    environment:
+      - RUN_MODE=prod
+      - LOGS_DIR=/var/logs/agenda
+    links:
+      - "mongo:mongo"
+    volumes:
+      - logs:/var/logs/agenda
